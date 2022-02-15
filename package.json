@@ -1,8 +1,12 @@
 {
   "license": "UNLICENSED",
+  "scripts": {
+    "test": "hh test"
+  },
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "chai": "^4.3.6",
     "chalk": "4.1.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
