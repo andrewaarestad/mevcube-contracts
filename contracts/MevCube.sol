@@ -12,7 +12,7 @@ contract MevCube {
 
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
-    mapping(string => uint[4][]) public moves;
+    mapping(bytes1 => uint[4][]) public moves;
 
     constructor() payable {
         owner = msg.sender;
@@ -33,13 +33,35 @@ contract MevCube {
         return colors;
     }
 
-    function move(string memory slice, uint times, bool toward) public {
+    function move(string memory rotations) public {
+        bytes memory rotationBytes = bytes(rotations);
+        for (uint rotIndex=0; rotIndex<rotationBytes.length; rotIndex++) {
+            bytes1 thisRotation = rotationBytes[rotIndex];
+            bytes1 thisRotationUpper = _upper(thisRotation);
+            bool toward = thisRotation != thisRotationUpper;
+            for (uint ii=0; ii<moves[thisRotationUpper].length; ii++) {
+                swapFaceColor(moves[thisRotationUpper][ii], toward);
+            }
+        }
+    }
 
+    function moveSingleAxis(string memory sliceString, uint times, bool toward) public {
+        bytes memory sliceBytes = bytes(sliceString);
+        bytes1 slice = sliceBytes[0];
+//        bytes1 sliceIndex = slice[0];
         for (uint moveIndex=0; moveIndex<times; moveIndex++) {
             for (uint ii=0; ii<moves[slice].length; ii++) {
                 swapFaceColor(moves[slice][ii], toward);
             }
         }
+    }
+
+    function scramble() public {
+        colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";
+    }
+
+    function reset() public {
+        colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
     }
 
     function swapFaceColor(uint[4] memory faceColorNums, bool toward) private {
@@ -55,6 +77,18 @@ contract MevCube {
             colors[faceColorNums[2]] = colors[faceColorNums[1]];
             colors[faceColorNums[1]] = aColor;
         }
+    }
+
+    function _upper(bytes1 _b1)
+    private
+    pure
+    returns (bytes1) {
+
+        if (_b1 >= 0x61 && _b1 <= 0x7A) {
+            return bytes1(uint8(_b1) - 32);
+        }
+
+        return _b1;
     }
 
 }

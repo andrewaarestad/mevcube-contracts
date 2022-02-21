@@ -4,6 +4,14 @@ const {TestCommon} = require("../test/test-common");
 const writeFile = require('util').promisify(require('fs').writeFile);
 // const hre = require('hardhat');
 
+async function setupWallets() {
+
+
+  await network.provider.send("hardhat_setBalance", [
+    process.env.METAMASK_TEST_WALLET_ADDRESS,
+    "0x1000000000000000000",
+  ]);
+}
 
 async function setupNfts(mockGausContract) {
 
@@ -36,6 +44,8 @@ async function main() {
   await writeFile('addresses.json', JSON.stringify({
     mevCube: mevCubeContract.address,
   }, null, 2));
+
+  await setupWallets();
 
 }
 

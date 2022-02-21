@@ -11,6 +11,17 @@ class TestCommon {
     await contract.deployed();
     return contract;
   }
+
+  static convertToString(state) {
+    let str = '';
+    const sliced = state.slice(2).trim();
+    // console.log('converting: ', sliced);
+    for (let ii=0; ii<sliced.length / 2; ii++) {
+      const val = parseInt(sliced.substring(ii * 2, ii * 2 + 2), 16);
+      str += String.fromCharCode(val);
+    }
+    return str;
+  }
 }
 
 
