@@ -1,3 +1,5 @@
+*.json
+.env
 artifacts
 cache
 .idea

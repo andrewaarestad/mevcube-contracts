@@ -1,7 +1,7 @@
 
 const {ethers,waffle} = require("hardhat");
 const {expect} = require('chai');
-const TestCommon = require("./test-common");
+const {TestCommon} = require("./test-common");
 
 async function deploy() {
   const contractFactory = await ethers.getContractFactory("MevCube");
