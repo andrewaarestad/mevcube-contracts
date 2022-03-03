@@ -38,7 +38,7 @@ contract MevCube {
         for (uint rotIndex=0; rotIndex<rotationBytes.length; rotIndex++) {
             bytes1 thisRotation = rotationBytes[rotIndex];
             bytes1 thisRotationUpper = _upper(thisRotation);
-            bool toward = thisRotation != thisRotationUpper;
+            bool toward = thisRotation == thisRotationUpper;
             for (uint ii=0; ii<moves[thisRotationUpper].length; ii++) {
                 swapFaceColor(moves[thisRotationUpper][ii], toward);
             }
@@ -57,6 +57,23 @@ contract MevCube {
     }
 
     function scramble() public {
+
+        uint numRotations = 10;
+        string memory seed = string(abi.encodePacked(toString(4), msg.sender, toString(block.number)));
+        uint256 randomNumber = getRandomGaussianNumber(seed);
+
+        console.log("randomNumber: %s", randomNumber);
+
+        uint256 randomNumberSeed = uint256(keccak256('Hello'));
+        uint256 upperLimit = 10;
+        uint n2 = UniformRandomNumber.uniform(randomNumberSeed, upperLimit);
+
+        console.log("n2: %s", n2);
+
+        for (uint moveIndex=0; moveIndex<numRotations; moveIndex++) {
+
+        }
+
         colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";
     }
 
@@ -79,16 +96,88 @@ contract MevCube {
         }
     }
 
-    function _upper(bytes1 _b1)
-    private
-    pure
-    returns (bytes1) {
-
+    function _upper(bytes1 _b1) private pure returns (bytes1) {
         if (_b1 >= 0x61 && _b1 <= 0x7A) {
             return bytes1(uint8(_b1) - 32);
         }
-
         return _b1;
     }
 
+    function random(string memory seed, uint8 offset) internal pure returns (uint8) {
+        return uint8(uint256(keccak256(abi.encodePacked(seed, toString(offset)))));
+    }
+
+    function toString(uint256 value) internal pure returns (string memory) {
+        // Inspired by OraclizeAPI's implementation - MIT license
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+
+
+    function getRandomGaussianNumber(string memory seed) public pure returns (uint256) {
+//        uint256[8] memory numbers;
+        uint256 number;
+//        for (uint8 i = 0; i < 8; ++i) {
+            int64 accumulator = 0;
+            for (uint8 j = 0; j < 16; ++j) {
+//                uint8 offset = (i * 16) + j;
+//                accumulator += int64(uint64(random(seed, offset)));
+                accumulator += int64(uint64(random(seed, 0)));
+            }
+
+            accumulator *= 10000;
+            accumulator /= 16;
+            accumulator = accumulator - 1270000;
+            accumulator *= 10000;
+            accumulator /= 733235;
+            accumulator *= 8;
+            accumulator += 105000;
+            accumulator /= 10000;
+            number = uint256(uint64(accumulator));
+//        }
+
+        return number;
+    }
+
+}
+
+/**
+ * @author Brendan Asselstine
+ * @notice A library that uses entropy to select a random number within a bound.  Compensates for modulo bias.
+ * @dev Thanks to https://medium.com/hownetworks/dont-waste-cycles-with-modulo-bias-35b6fdafcf94
+ */
+library UniformRandomNumber {
+    /// @notice Select a random number without modulo bias using a random seed and upper bound
+    /// @param _entropy The seed for randomness
+    /// @param _upperBound The upper bound of the desired number
+    /// @return A random number less than the _upperBound
+    function uniform(uint256 _entropy, uint256 _upperBound) internal pure returns (uint256) {
+        require(_upperBound > 0, "UniformRand/min-bound");
+        uint256 min = (type(uint256).max - _upperBound + 1) % _upperBound;
+        uint256 random = _entropy;
+        while (true) {
+            if (random >= min) {
+                break;
+            }
+            random = uint256(keccak256(abi.encodePacked(random)));
+        }
+        return random % _upperBound;
+    }
 }
