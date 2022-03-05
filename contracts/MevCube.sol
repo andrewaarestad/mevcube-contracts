@@ -13,6 +13,7 @@ contract MevCube {
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
     mapping(bytes1 => uint[4][]) public moves;
+    mapping(uint => bytes1) public moveIndexes;
 
     constructor() payable {
         owner = msg.sender;
@@ -27,6 +28,15 @@ contract MevCube {
         moves["S"] = [[3, 10, 32, 43], [4, 13, 31, 40], [5, 16, 30, 37]];
         moves["B"] = [[2, 36, 33, 17], [1, 39, 34, 14], [0, 42, 35, 11], [45, 47, 53, 51], [46, 50, 52, 48]];
 
+        moveIndexes[0] = "L";
+        moveIndexes[1] = "M";
+        moveIndexes[2] = "R";
+        moveIndexes[3] = "U";
+        moveIndexes[4] = "E";
+        moveIndexes[5] = "D";
+        moveIndexes[6] = "F";
+        moveIndexes[7] = "S";
+        moveIndexes[8] = "B";
     }
 
     function getState() public view returns(bytes memory state) {
@@ -58,23 +68,30 @@ contract MevCube {
 
     function scramble() public {
 
-        uint numRotations = 10;
+//        uint numRotations = 10;
         string memory seed = string(abi.encodePacked(toString(4), msg.sender, toString(block.number)));
-        uint256 randomNumber = getRandomGaussianNumber(seed);
+        uint256 numRotations = getRandomGaussianNumber(seed);
 
-        console.log("randomNumber: %s", randomNumber);
+        console.log("numRotations: %s", numRotations);
 
-        uint256 randomNumberSeed = uint256(keccak256('Hello'));
-        uint256 upperLimit = 10;
-        uint n2 = UniformRandomNumber.uniform(randomNumberSeed, upperLimit);
+//        uint256 upperLimit = 10;
 
-        console.log("n2: %s", n2);
+//        console.log("n2: %s", n2);
+        bool toward = true;
 
         for (uint moveIndex=0; moveIndex<numRotations; moveIndex++) {
 
+            uint256 randomNumberSeed = uint256(keccak256('Hello'));
+
+            uint n2 = UniformRandomNumber.uniform(randomNumberSeed, 9);
+//            swapFaceColor(moves[moveIndexes[n2]][ii], toward);
+
+            for (uint ii=0; ii<moves[moveIndexes[n2]].length; ii++) {
+                swapFaceColor(moves[moveIndexes[n2]][ii], toward);
+            }
         }
 
-        colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";
+//        colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";
     }
 
     function reset() public {
