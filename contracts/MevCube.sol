@@ -66,13 +66,15 @@ contract MevCube {
         }
     }
 
+    // TODO: This function is really inefficient.  Can probably generate a single random uint256, chop it up into uint16's, and use those for each move
     function scramble() public {
 
-//        uint numRotations = 10;
+        // By scrambling the cube with 30 rotations, we guarantee that there will exist a solution that is shorter than the inverse of the scramble
+        uint numRotations = 30;
         string memory seed = string(abi.encodePacked(toString(4), msg.sender, toString(block.number)));
-        uint256 numRotations = getRandomGaussianNumber(seed);
+//        uint256 numRotations = getRandomGaussianNumber(seed);
 
-        console.log("numRotations: %s", numRotations);
+//        console.log("scrambling cube with %s rotations", numRotations);
 
 //        uint256 upperLimit = 10;
 
@@ -81,9 +83,10 @@ contract MevCube {
 
         for (uint moveIndex=0; moveIndex<numRotations; moveIndex++) {
 
-            uint256 randomNumberSeed = uint256(keccak256('Hello'));
+//            uint256 randomNumberSeed = uint256(keccak256(seed));
+            uint256 randomSeed = uint256(keccak256(abi.encodePacked(seed, toString(0))));
 
-            uint n2 = UniformRandomNumber.uniform(randomNumberSeed, 9);
+            uint n2 = UniformRandomNumber.uniform(randomSeed, 9);
 //            swapFaceColor(moves[moveIndexes[n2]][ii], toward);
 
             for (uint ii=0; ii<moves[moveIndexes[n2]].length; ii++) {
