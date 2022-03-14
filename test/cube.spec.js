@@ -97,4 +97,10 @@ describe('Cube', () => {
     expect(state1).to.eq(state2);
   })
 
+  it('should return version', async() => {
+    const contract = await deploy();
+    await contract.getVersion();
+
+  })
+
 })

@@ -10,6 +10,8 @@ contract MevCube {
 
     address private immutable owner;
 
+    bytes version = "1.0.1";
+
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
     mapping(bytes1 => uint[4][]) public moves;
@@ -39,7 +41,11 @@ contract MevCube {
         moveIndexes[8] = "B";
     }
 
-    function getState() public view returns(bytes memory state) {
+    function getVersion() public view returns(bytes memory) {
+        return version;
+    }
+
+    function getState() public view returns(bytes memory) {
         return colors;
     }
 
@@ -74,7 +80,7 @@ contract MevCube {
         string memory seed = string(abi.encodePacked(toString(4), msg.sender, toString(block.number)));
 //        uint256 numRotations = getRandomGaussianNumber(seed);
 
-//        console.log("scrambling cube with %s rotations", numRotations);
+        console.log("scrambling cube with %s rotations", numRotations);
 
 //        uint256 upperLimit = 10;
 
@@ -84,7 +90,7 @@ contract MevCube {
         for (uint moveIndex=0; moveIndex<numRotations; moveIndex++) {
 
 //            uint256 randomNumberSeed = uint256(keccak256(seed));
-            uint256 randomSeed = uint256(keccak256(abi.encodePacked(seed, toString(0))));
+            uint256 randomSeed = uint256(keccak256(abi.encodePacked(seed, toString(moveIndex))));
 
             uint n2 = UniformRandomNumber.uniform(randomSeed, 9);
 //            swapFaceColor(moves[moveIndexes[n2]][ii], toward);
@@ -92,6 +98,9 @@ contract MevCube {
             for (uint ii=0; ii<moves[moveIndexes[n2]].length; ii++) {
                 swapFaceColor(moves[moveIndexes[n2]][ii], toward);
             }
+
+//            string memory debug = string(colors);
+//            console.log("scramble move %i / %i, state is now: %s", (moveIndex+1), n2, debug);
         }
 
 //        colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";

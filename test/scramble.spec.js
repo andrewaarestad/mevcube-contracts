@@ -15,7 +15,7 @@ async function deploy() {
 
 
 
-describe.only('Cube', () => {
+describe('Scramble', () => {
 
 
   it('should scramble', async() => {
