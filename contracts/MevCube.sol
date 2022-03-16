@@ -8,6 +8,8 @@ import "hardhat/console.sol";
 
 contract MevCube {
 
+    event Solved(address indexed _solver, string _solution);
+
     address private immutable owner;
 
     bytes version = "1.0.1";
@@ -49,6 +51,17 @@ contract MevCube {
         return colors;
     }
 
+    function isSolved() public view returns(bool) {
+        bool solved = true;
+        for (uint faceIndex=0; faceIndex<5; faceIndex++) {
+            for (uint tileIndex=0; tileIndex<8; tileIndex++) {
+                solved = solved && colors[faceIndex*9+tileIndex] == colors[faceIndex*9+tileIndex+1];
+            }
+        }
+//        console.log("isSolved: %s", solved);
+        return solved;
+    }
+
     function move(string memory rotations) public {
         bytes memory rotationBytes = bytes(rotations);
         for (uint rotIndex=0; rotIndex<rotationBytes.length; rotIndex++) {
@@ -58,6 +71,9 @@ contract MevCube {
             for (uint ii=0; ii<moves[thisRotationUpper].length; ii++) {
                 swapFaceColor(moves[thisRotationUpper][ii], toward);
             }
+        }
+        if (isSolved()) {
+            emit Solved(msg.sender, rotations);
         }
     }
 
@@ -80,7 +96,7 @@ contract MevCube {
         string memory seed = string(abi.encodePacked(toString(4), msg.sender, toString(block.number)));
 //        uint256 numRotations = getRandomGaussianNumber(seed);
 
-        console.log("scrambling cube with %s rotations", numRotations);
+//        console.log("scrambling cube with %s rotations", numRotations);
 
 //        uint256 upperLimit = 10;
 
