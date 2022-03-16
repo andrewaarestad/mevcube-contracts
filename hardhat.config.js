@@ -31,6 +31,16 @@ module.exports = {
       //   url: process.env.ALCHEMY_URL,
       //   blockNumber: 12943483
       // }
+    },
+    mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts: [process.env.POLYGON_MUMBAI_PRIVATE_KEY],
+      gasPrice: 8000000000
+    },
+    matic: {
+      url: "https://speedy-nodes-nyc.moralis.io/<YOUR_ID>/polygon/mainnet",
+      accounts: [process.env.POLYGON_MUMBAI_PRIVATE_KEY],
+      gasPrice: 8000000000
     }
   },
   etherscan: {

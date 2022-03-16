@@ -2,7 +2,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "test": "hh test",
-    "deploy-mev-cube": "hh run scripts/deploy-mev-cube.js --network localhost"
+    "deploy-to-local-hh": "hh run scripts/deploy-to-local-hh.js --network localhost",
+    "deploy-to-mumbai": "hh run scripts/deploy-to-network.js --network mumbai"
   },
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
