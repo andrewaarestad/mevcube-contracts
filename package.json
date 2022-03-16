@@ -1,5 +1,5 @@
 {
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "test": "hh test",
     "deploy-to-local-hh": "hh run scripts/deploy-to-local-hh.js --network localhost",
