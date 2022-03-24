@@ -12,7 +12,7 @@ contract MevCube {
 
     address private immutable owner;
 
-    bytes version = "1.0.1";
+    bytes version = "1.1.0";
 
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
