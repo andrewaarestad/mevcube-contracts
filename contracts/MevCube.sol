@@ -62,7 +62,8 @@ contract MevCube {
         return solved;
     }
 
-    function move(string memory rotations) public {
+    function move(string memory rotations) public payable {
+        require(msg.value == 0.01 ether, "Incorrect solver fee");
         bytes memory rotationBytes = bytes(rotations);
         for (uint rotIndex=0; rotIndex<rotationBytes.length; rotIndex++) {
             bytes1 thisRotation = rotationBytes[rotIndex];
@@ -77,19 +78,21 @@ contract MevCube {
         }
     }
 
-    function moveSingleAxis(string memory sliceString, uint times, bool toward) public {
-        bytes memory sliceBytes = bytes(sliceString);
-        bytes1 slice = sliceBytes[0];
-//        bytes1 sliceIndex = slice[0];
-        for (uint moveIndex=0; moveIndex<times; moveIndex++) {
-            for (uint ii=0; ii<moves[slice].length; ii++) {
-                swapFaceColor(moves[slice][ii], toward);
-            }
-        }
-    }
+//    function moveSingleAxis(string memory sliceString, uint times, bool toward) public {
+//        bytes memory sliceBytes = bytes(sliceString);
+//        bytes1 slice = sliceBytes[0];
+////        bytes1 sliceIndex = slice[0];
+//        for (uint moveIndex=0; moveIndex<times; moveIndex++) {
+//            for (uint ii=0; ii<moves[slice].length; ii++) {
+//                swapFaceColor(moves[slice][ii], toward);
+//            }
+//        }
+//    }
 
     // TODO: This function is really inefficient.  Can probably generate a single random uint256, chop it up into uint16's, and use those for each move
     function scramble() public {
+
+        require(isSolved(), "Cube must be solved");
 
         // By scrambling the cube with 30 rotations, we guarantee that there will exist a solution that is shorter than the inverse of the scramble
         uint numRotations = 30;
@@ -119,7 +122,11 @@ contract MevCube {
 //            console.log("scramble move %i / %i, state is now: %s", (moveIndex+1), n2, debug);
         }
 
-//        colors = "BUUBUULDDFLLBRRDRRBRRFFUFFBDDRDDUDDURRULLLLLLFFUFBBFBB";
+        // Pay the scrambler a reward
+        uint amount = address(this).balance;
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Failed to send reward");
+
     }
 
     function reset() public {

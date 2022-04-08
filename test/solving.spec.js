@@ -11,8 +11,8 @@ describe('Solving', () => {
 
     const contract = await TestCommon.deployMevCube();
 
-    const result1 = await contract.move('F');
-    const result2 = await contract.move('f');
+    const result1 = await contract.move('F', { value: TestCommon.SOLVER_FEE });
+    const result2 = await contract.move('f', { value: TestCommon.SOLVER_FEE });
 
 
     const confirmation1 = await result1.wait();
