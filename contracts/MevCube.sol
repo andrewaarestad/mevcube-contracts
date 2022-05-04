@@ -62,6 +62,10 @@ contract MevCube {
         return solved;
     }
 
+    function currentScrambleReward() public view returns(uint) {
+        return address(this).balance;
+    }
+
     function move(string memory rotations) public payable {
         require(msg.value == 0.01 ether, "Incorrect solver fee");
         bytes memory rotationBytes = bytes(rotations);

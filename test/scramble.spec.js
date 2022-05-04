@@ -2,6 +2,7 @@
 const {expect} = require('chai');
 const {TestCommon} = require("./test-common");
 const { ethers, waffle} = require("hardhat");
+const {BigNumber} = require("ethers");
 
 
 
@@ -55,6 +56,16 @@ describe('Scramble', () => {
 
 
   });
+
+  it('should return scrambler reward', async() => {
+
+    const contract = await TestCommon.deployMevCube();
+
+    const result = await contract.currentScrambleReward();
+
+    expect(result.eq(BigNumber.from(0))).to.be.true;
+
+  })
 
 
 })

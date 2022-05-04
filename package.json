@@ -2,6 +2,7 @@
   "license": "MIT",
   "scripts": {
     "test": "hh test",
+    "hh_node": "hh node",
     "deploy-to-local-hh": "hh run scripts/deploy-to-local-hh.js --network localhost",
     "deploy-to-mumbai": "hh run scripts/deploy-to-network.js --network mumbai"
   },
