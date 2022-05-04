@@ -58,14 +58,9 @@ describe('Scramble', () => {
   });
 
   it('should return scrambler reward', async() => {
-
     const contract = await TestCommon.deployMevCube();
-
     const result = await contract.currentScrambleReward();
-
     expect(result.eq(BigNumber.from(0))).to.be.true;
-
-  })
-
+  });
 
 })
