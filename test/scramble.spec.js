@@ -60,7 +60,6 @@ describe('Scramble', () => {
   it('should return scrambler reward', async() => {
     const contract = await TestCommon.deployMevCube();
     const result = await contract.currentScrambleReward();
-    console.log('scramble reward', ethers.utils.formatEther(result));
     expect(result.eq(TestCommon.SOLVER_FEE)).to.be.true;
   });
 

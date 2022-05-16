@@ -12,7 +12,7 @@ contract MevCube {
 
     address private immutable owner;
 
-    uint solverFee = 0.1 ether;
+    uint private solverFee = 0.1 ether;
 
     bytes version = "1.2.1";
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
@@ -66,6 +66,10 @@ contract MevCube {
         }
 //        console.log("isSolved: %s", solved);
         return solved;
+    }
+
+    function currentSolverFee() public view returns (uint) {
+        return solverFee;
     }
 
     function currentScrambleReward() public view returns(uint) {
