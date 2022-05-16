@@ -12,12 +12,18 @@ contract MevCube {
 
     address private immutable owner;
 
-    bytes version = "1.2.0";
+    uint solverFee = 0.1 ether;
 
+    bytes version = "1.2.1";
     bytes colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
     mapping(bytes1 => uint[4][]) public moves;
     mapping(uint => bytes1) public moveIndexes;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "onlyOwner");
+        _;
+    }
 
     constructor() payable {
         owner = msg.sender;
@@ -66,8 +72,12 @@ contract MevCube {
         return address(this).balance;
     }
 
+    function setSolverFee(uint newSolverFee) public onlyOwner {
+        solverFee = newSolverFee;
+    }
+
     function move(string memory rotations) public payable {
-        require(msg.value == 0.01 ether, "Incorrect solver fee");
+        require(msg.value == solverFee, "Incorrect solver fee");
         bytes memory rotationBytes = bytes(rotations);
         for (uint rotIndex=0; rotIndex<rotationBytes.length; rotIndex++) {
             bytes1 thisRotation = rotationBytes[rotIndex];
@@ -133,7 +143,7 @@ contract MevCube {
 
     }
 
-    function reset() public {
+    function reset() public onlyOwner {
         colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
     }
 

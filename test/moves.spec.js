@@ -62,5 +62,17 @@ describe('Moves', () => {
     expect(state1).to.eq(state2);
   })
 
+  it('should only allow owner to reset', async() => {
+
+    await contract.reset();
+
+    const [owner, otherPerson, _] = await ethers.getSigners();
+
+    await expect(contract.connect(otherPerson).reset()).to.be.revertedWith("onlyOwner");
+
+
+
+  })
+
 
 })
